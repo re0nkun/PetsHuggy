@@ -4,19 +4,12 @@ services:
     image: mysql:5.7.20
     environment:
       - MYSQL_ROOT_PASSWORD=password
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=db
-      - PMA_USER=root
-      - PMA_PASSWORD=password
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
     links:
       - db
-    ports:
-       - 8080:80
-    volumes:
-       - /sessions
   web:
     build: .
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
