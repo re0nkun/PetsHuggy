@@ -29,13 +29,17 @@ gem 'jbuilder', '~> 2.5'
 # gem 'bcrypt', '~> 3.1.7'
 
 gem 'bootstrap-sass', '~> 3.3.7'
-gem 'jquery-rails'
+gem 'jquery-rails'  #If you're using Rails 5.1+
 gem 'devise'
 gem 'toastr-rails'
 gem 'omniauth-facebook'
 gem 'paperclip', '~> 5.0.0'
 gem 'dropzonejs-rails'
 gem 'figaro', '~> 1.1.1'
+gem 'geocoder'
+gem 'jquery-ui-rails'
+gem 'stripe'
+gem 'rest-client'
 
 
 # Use Capistrano for deployment
