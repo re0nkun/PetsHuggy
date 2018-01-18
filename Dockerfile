@@ -6,6 +6,8 @@ RUN apt-get install -y libpq-dev
 RUN apt-get install -y nodejs
 RUN apt-get install -y imagemagick
 
+RUN wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+
 RUN mkdir /myapp
 WORKDIR /myapp
 
