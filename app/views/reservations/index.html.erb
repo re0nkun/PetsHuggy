@@ -31,7 +31,7 @@
 
               <div class="col-md-2 col-sm-2 col-xs-10 col-middle row-space-2">
                 <%= link_to user_path(reservation.listing.user) do %>
-                  <%= image_tag reservation.listing.user.image, class:"img-circle profile-1" unless reservation.listing.user.image.blank? %>
+                  <%= image_tag reservation.listing.user.image, class:"img-circle profile-1" %>
                   <%= reservation.listing.user.name %>
                 <% end %>
               </div>

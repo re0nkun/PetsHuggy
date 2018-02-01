@@ -1,0 +1,147 @@
+<%= render 'partial/navbar' %>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+
+      <div id="search-filter">
+        <%= render 'filter' %>
+      </div>
+
+      <div id="search-result" class="row-space-top-4">
+        <%= render 'list' %>
+      </div>
+      <!-- <div class="">
+        <%#= text_field_tag :search, params[:search], placeholder: "Where are you going?", class: "form-control", id:"p-input" %>
+      </div> -->
+    </div>
+
+    <div class="col-md-6">
+      <div id="map" style="height: 500px;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: <%= @latitude %>, lng: <%= @longitude %>},
+    zoom: 13
+  });
+  var input = /** @type {!HTMLInputElement} */(
+      document.getElementById('pac-input'));
+
+  var autocomplete = new google.maps.places.Autocomplete(input);
+  autocomplete.bindTo('bounds', map);
+
+  markers = [];
+  infowindows = [];
+
+  <% @arrlistings.each do |listing| %>
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(<%= listing.latitude %>, <%= listing.longitude %>),
+      map: map
+    });
+
+    markers.push(marker);
+
+
+    marker.addListener('click', function() {
+
+      <% if !listing.photos.blank? %>
+        var content = "<div>" + '<a href="/listings/' + <%= listing.id %> +'">' + "<img src="+"<%= listing.photos[0].image.url(:thumb) %>" + " " + "style='width: 100%;height: 150px;'" +"alt='139'>" + "</a>" + '<br>' + "<h5><%= listing.listing_title %></h5>" + "<div class="+"col-md-12"+">"+"<h4>Reviews <span class="+"average_rating_listing"+"></span>"+"(<%= listing.reviews.count %>)"+"</h4></div>";
+      <% end %>
+
+      var infowindow = new google.maps.InfoWindow({
+        content: content,
+        maxWidth: 280
+      });
+
+      infowindow.open(map, this);
+      infowindows.push(infowindow);
+
+      google.maps.event.addListener(infowindow, 'domready', function() {
+        $('.average_rating_listing').raty({
+          path: '/assets',
+          readOnly: true,
+          score: <%= listing.average_star_rate %>
+        });
+      });
+    });
+  <% end %>
+
+  autocomplete.addListener('place_changed', function() {
+    infowindows.forEach(function(infowindow) {
+      infowindow.close();
+    });
+    infowindows = [];
+
+    markers.forEach(function(marker) {
+      marker.setVisible(false);
+    });
+    markers = [];
+
+
+    var place = autocomplete.getPlace();
+
+    if (!place.geometry) {
+      window.alert("Autocomplete's returned place contains no geometry");
+      return;
+    }
+
+    // If the place has a geometry, then present it on a map.
+    if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+      map.setZoom(13);  // Why 17? Because it looks good.
+    } else {
+      map.setCenter(place.geometry.location);
+      map.setZoom(13);  // Why 17? Because it looks good.
+    }
+
+
+    var lat = place.geometry.location.lat();
+    var lng = place.geometry.location.lng();
+    var geolocation = [lat,lng];
+
+
+    var location = place.formatted_address;
+
+    url = "/search?utf8=　&search="+place.formatted_address;
+    window.history.pushState(null,null,url);
+
+    $.ajax({
+      url: '/ajaxsearch',
+      data: {'geolocation': geolocation, 'location': location}
+    });
+
+  });
+
+
+  google.maps.event.addListener(map,'dragend', function() {
+
+    infowindows.forEach(function(infowindow) {
+      infowindow.close();
+    });
+    infowindows = [];
+
+    markers.forEach(function(marker) {
+      marker.setVisible(false);
+    });
+    markers = [];
+
+    var pos = map.getCenter();
+    var lat = pos.lat();
+    var lng = pos.lng();
+    var geolocation = [lat,lng];
+
+    $.ajax({
+      url: '/ajaxsearch',
+      data: {'geolocation': geolocation}
+    });
+
+  });
+}
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCAsQYp2krYwRinC8kO30-pMlLLlie4cE&libraries=places&callback=initMap" async defer></script>

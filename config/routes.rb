@@ -17,6 +17,14 @@ Rails.application.routes.draw do
     resources :reservations, only: [:new, :create]
   end
 
+  resources :listings do
+    resources :reviews, only: [:create, :destroy]
+  end
+
+  resources :conversations, only: [:index, :create] do
+    resources :messages, only: [:index, :create]
+  end
+
   get '/setdate' => 'reservations#setdate'
   get '/duplicate' => 'reservations#duplicate'
 
@@ -35,4 +43,10 @@ Rails.application.routes.draw do
   get '/connect/oauth' => 'stripe#oauth', as: 'stripe_oauth'
   get '/connect/confirm' => 'stripe#confirm', as: 'stripe_confirm'
   get '/connect/deauthorize' => 'stripe#deauthorize', as: 'stripe_deauthorize'
+
+  get '/not_checked' => 'listings#not_checked'
+
+  get '/search' => 'pages#search'
+
+  get '/ajaxsearch' => 'pages#ajaxsearch'
 end

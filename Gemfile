@@ -41,6 +41,11 @@ gem 'jquery-ui-rails'
 gem 'stripe'
 gem 'rest-client'
 
+gem "private_pub"
+gem "thin"
+
+gem 'ransack'
+
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

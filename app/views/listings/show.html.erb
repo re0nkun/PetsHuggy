@@ -44,7 +44,7 @@
 
         <div class="col-md-3 text-center row-space-2">
           <%= link_to user_path(@listing.user) do %>
-            <%= image_tag @listing.user.image, class:"img-circle profile-2" unless @listing.user.image.blank? %>
+            <%= image_tag @listing.user.image, class:"img-circle profile-2" %>
           <% end %>
           <h5><%= @listing.user.name %></h5>
         </div>
@@ -165,9 +165,16 @@
   </div>
 
   <!-- レビュー    -->
-  <div class="row">
+  <div class="row row-space-4">
     <div class="col-md-9">
-      <h3 class="row-space-3">レビュー</h3>
+      <h3 class="row-space-3">レビュー<%= @reviews.count %>件</h3>
+      <% if @reviews.any? %>
+        <div id="average_star_rate"></div>
+      <% end %>
+      <br>
+      <%= render 'reviews/form' if @currentUserBooking && !@currentUserReview %>
+      <%= render 'reviews/list' %>
+
     </div>
 
     <div class="col-md-3">
@@ -196,6 +203,7 @@
     <div class="col-md-9">
       <h3 class="row-space-3">近くのリスティング</h3>
 
+      <% if @listing.nearbys(10).any? %>
       <% for listing in @listing.nearbys(10) %>
         <div class="col-md-4">
           <div class="panel panel-default">
@@ -211,7 +219,7 @@
                   <%= link_to listing.listing_title, listing %><br>
                 </div>
                 <div class="col-md-3 col-xs-3">
-                  <%= image_tag listing.user.image, class:"img-circle profile-1" unless listing.user.image.blank? %>
+                  <%= image_tag listing.user.image, class:"img-circle profile-1" %>
                 </div>
                 <div class="price-card">
                   <%= listing.price_pernight %>円
@@ -220,6 +228,7 @@
             </div>
           </div>
         </div>
+      <% end %>
       <% end %>
 
     </div>
@@ -391,5 +400,13 @@
 
       }
     });
+  });
+</script>
+
+<script>
+  $('#average_star_rate').raty({
+    path: '/assets',
+    readOnly: true,
+    score: <%= @listing.average_star_rate %>
   });
 </script>

@@ -16,6 +16,6 @@ services:
     volumes:
       - .:/myapp:cached
     ports:
-      - "3000:3000"
+      - 3000:3000
     depends_on:
       - db
