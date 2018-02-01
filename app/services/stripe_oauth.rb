@@ -16,10 +16,10 @@ class StripeOauth < Struct.new(:user)
       if json && json['error']
         case json['error']
 
-        when 'invalid_redirect_uri'
+        when 'invalid_redirect_uri' #<a href='#{Rails.configuration.github_url}/blob/master/README.markdown' target='_blank'>README</a>
           return nil, <<-EOF
           Redirect URI is not setup correctly.
-          Please see the <a href='#{Rails.configuration.github_url}/blob/master/README.markdown' target='_blank'>README</a>
+          Please see the
           EOF
 
         else
