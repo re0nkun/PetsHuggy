@@ -19,7 +19,7 @@ class StripeOauth < Struct.new(:user)
         when 'invalid_redirect_uri'
           return nil, <<-EOF
           Redirect URI is not setup correctly.
-          Please see the <a href='#{Rails.configuration.github_url}/blob/master/README.markdown' target='_blank'>README</a>
+          Please see the <a href='#' target='_blank'>README</a>
           EOF
 
         else
